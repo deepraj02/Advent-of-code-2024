@@ -2,44 +2,26 @@ package main
 
 import (
 	"bufio"
+	distance "deepraj02/aoc2024/part1"
+	similarity "deepraj02/aoc2024/part2"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	leftList, rightList := inputParser()
-	totalDistance := calculateDistance(leftList, rightList)
+	filepath := "inputs.txt"
+	leftList, rightList := inputParser(filepath)
+	totalDistance := distance.CalculateDistance(leftList, rightList)
 	fmt.Printf("Total distance between lists: %d\n", totalDistance)
+	similarityScore := similarity.CalculateSimilarityScore(leftList, rightList)
+	fmt.Printf("Similarity score between lists: %d\n", similarityScore)
 
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-func calculateDistance(leftList, rightList []int) int {
-	sort.Ints(leftList)
-	sort.Ints(rightList)
-
-	if len(leftList) != len(rightList) {
-		panic("Invalid input")
-	}
-	totalDistance := 0
-	for i := 0; i < len(leftList); i++ {
-		distance := abs(leftList[i] - rightList[i])
-		totalDistance += distance
-	}
-	return totalDistance
-}
-
-func inputParser() ([]int, []int) {
-	data, err := os.OpenFile("inputs.txt", os.O_RDONLY, 0644)
+func inputParser(filename string) ([]int, []int) {
+	data, err := os.OpenFile(filename, os.O_RDONLY, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +37,6 @@ func inputParser() ([]int, []int) {
 			continue
 		}
 		parts := strings.Fields(line)
-		fmt.Printf("Reading from file %v", parts)
 		if len(parts) != 2 {
 			panic("Invalid input format")
 		}
